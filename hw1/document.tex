@@ -1,0 +1,335 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Structured General Purpose Assignment
+% LaTeX Template
+%
+% This template has been downloaded from:
+% http://www.latextemplates.com
+%
+% Original author:
+% Ted Pavlic (http://www.tedpavlic.com)
+%
+% Note:
+% The \lipsum[#] commands throughout this template generate dummy text
+% to fill the template out. These commands should all be removed when 
+% writing assignment content.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+% PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass{article}
+
+\usepackage{fancyhdr} % Required for custom headers
+\usepackage{lastpage} % Required to determine the last page for the footer
+\usepackage{extramarks} % Required for headers and footers
+\usepackage{graphicx} % Required to insert images
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+\usepackage{amsmath, amsfonts, bm, physics}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage[toc,page]{appendix}
+
+\lstset{
+    %numbers=left,
+    stepnumber=1,    
+    firstnumber=1,
+    numberfirstline=true,
+    basicstyle=\ttfamily,
+    keywordstyle=\color{blue}\ttfamily,
+    stringstyle=\color{red}\ttfamily,
+    commentstyle=\color{green}\ttfamily,
+    breaklines=true,
+}
+
+% Margins
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in 
+
+\linespread{1.1} % Line spacing
+
+% Set up the header and footer
+\pagestyle{fancy}
+\lhead{\hmwkAuthorName} % Top left header
+\chead{\hmwkClass\ (\hmwkClassInstructor\ \hmwkClassTime): \hmwkTitle} % Top center header
+\rhead{\firstxmark} % Top right header
+\lfoot{\lastxmark} % Bottom left footer
+\cfoot{} % Bottom center footer
+\rfoot{Page\ \thepage\ of\ \pageref{LastPage}} % Bottom right footer
+\renewcommand\headrulewidth{0.4pt} % Size of the header rule
+\renewcommand\footrulewidth{0.4pt} % Size of the footer rule
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs
+
+%----------------------------------------------------------------------------------------
+% DOCUMENT STRUCTURE COMMANDS
+% Skip this unless you know what you're doing
+%----------------------------------------------------------------------------------------
+
+% Header and footer for when a page split occurs within a problem environment
+\newcommand{\enterProblemHeader}[1]{
+  \nobreak\extramarks{#1}{#1 continued on next page\ldots}\nobreak
+  \nobreak\extramarks{#1 (continued)}{#1 continued on next page\ldots}\nobreak
+}
+
+% Header and footer for when a page split occurs between problem environments
+\newcommand{\exitProblemHeader}[1]{
+  \nobreak\extramarks{#1 (continued)}{#1 continued on next page\ldots}\nobreak
+  \nobreak\extramarks{#1}{}\nobreak
+}
+
+\setcounter{secnumdepth}{0} % Removes default section numbers
+\newcounter{homeworkProblemCounter} % Creates a counter to keep track of the number of problems
+
+\newcommand{\homeworkProblemName}{}
+\newenvironment{homeworkProblem}[1][Problem \arabic{homeworkProblemCounter}]{ % Makes a new environment called homeworkProblem which takes 1 argument (custom name) but the default is "Problem #"
+    \stepcounter{homeworkProblemCounter} % Increase counter for number of
+% problems
+    \renewcommand{\homeworkProblemName}{#1} % Assign \homeworkProblemName the
+% name of the problem
+    \section{\homeworkProblemName} % Make a section in the document with the
+% custom problem count
+    \enterProblemHeader{\homeworkProblemName} % Header and footer within the
+% environment
+}{
+    \exitProblemHeader{\homeworkProblemName} % Header and footer after the
+% environment
+}
+
+\newcommand{\problemAnswer}[1]{ % Defines the problem answer command with the content as the only argument
+    \noindent\textbf{\emph{Answer: }}#1 % Just put a keyword Answer in
+    % bold/italic at the beginning
+}
+
+\newcommand{\homeworkSectionName}{}
+\newenvironment{homeworkSection}[1]{ % New environment for sections within homework problems, takes 1 argument - the name of the section
+    \renewcommand{\homeworkSectionName}{#1} % Assign \homeworkSectionName to the
+% name of the section from the environment argument
+    \subsection{\homeworkSectionName} % Make a subsection with the custom name
+% of the subsection
+    \enterProblemHeader{\homeworkProblemName\ [\homeworkSectionName]} % Header
+% and footer within the environment
+}{
+    \enterProblemHeader{\homeworkProblemName} % Header and footer after the
+% environment
+}
+
+\newtheorem{theorem}{Theorem}[homeworkProblemCounter]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\newenvironment{proof}[1][Proof]{
+  \begin{trivlist}
+    \item[\hskip \labelsep {\bfseries #1}]}{
+  \end{trivlist}
+}
+\newenvironment{definition}[1][Definition]{
+  \begin{trivlist}
+    \item[\hskip \labelsep {\bfseries #1}]}{
+  \end{trivlist}
+}
+
+\newenvironment{example}[1][Example]{
+  \begin{trivlist}
+    \item[\hskip \labelsep {\bfseries #1}]}{
+  \end{trivlist}
+}
+    
+\newenvironment{remark}[1][Remark]{
+  \begin{trivlist}
+    \item[\hskip \labelsep {\bfseries #1}]}{
+  \end{trivlist}
+}
+
+\newcommand{\qed}{
+  \nobreak \ifvmode \relax \else
+  \ifdim\lastskip<1.5em \hskip-\lastskip
+  \hskip1.5em plus0em minus0.5em \fi \nobreak
+  \vrule height0.75em width0.5em depth0.25em\fi
+}
+
+\lstset{
+  frame=single,
+  breaklines=true,
+  postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}}
+}
+   
+%----------------------------------------------------------------------------------------
+% NAME AND CLASS SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\hmwkTitle}{Assignment\ \#1} % Assignment title
+\newcommand{\hmwkDueDate}{Monday, April\ 18,\ 2016} % Due date
+\newcommand{\hmwkClass}{MAT\ 280} % Course/class
+\newcommand{\hmwkClassTime}{MF 13:30 - 15:00} % Class/lecture time
+\newcommand{\hmwkClassInstructor}{Prof. Thomas Strohmer} % Teacher/lecturer
+\newcommand{\hmwkAuthorName}{Wenhao Wu} % Your name
+
+%----------------------------------------------------------------------------------------
+% TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title{
+  \vspace{2in}
+  \textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
+  \normalsize\vspace{0.1in}\small{Due\ on\ \hmwkDueDate}\\
+  \vspace{0.1in}\large{\textit{\hmwkClassInstructor\ \hmwkClassTime}}
+  \vspace{3in}
+}
+
+\author{\textbf{\hmwkAuthorName}}
+\date{} % Insert date here if you want it to appear below your name
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+  \maketitle
+  
+  %----------------------------------------------------------------------------------------
+  % TABLE OF CONTENTS
+  %----------------------------------------------------------------------------------------
+  
+  %\setcounter{tocdepth}{1} % Uncomment this line if you don't want subsections listed in the ToC
+  
+  \newpage
+  \tableofcontents
+  \newpage
+  
+  %----------------------------------------------------------------------------------------
+  % PROBLEM 1
+  %----------------------------------------------------------------------------------------
+  \begin{homeworkProblem}
+    Show that two random vectors in high dimensions are almost orthogonal.
+    \vspace{10pt}
+      
+    \problemAnswer{
+    }
+  \end{homeworkProblem}
+  %\clearpage
+  
+  %----------------------------------------------------------------------------------------
+  % PROBLEM 2
+  %----------------------------------------------------------------------------------------
+  \begin{homeworkProblem}
+    Consider the following setup. Given a square of side length 1, we place four
+    circles in the square as depicted in Figure 1 (each of the gray circles has
+    radius 1/4). We now place a circle at the center of the square (the blue
+    circle in Figure~\ref{fig:circles}(a)) such that this circle in the middle
+    touches each of the four identical circles. Let $r$ denote the radius of the blue
+    circle.
+    
+    We can do something analogous in three dimensions, see
+    Figure~\ref{fig:circles}(b). We place eight spheres of radius 1/4 inside a
+    cube of side length 1, and put a (blue) sphere in the middle such that it
+    touches all eight (gray) spheres.
+    
+    In four dimensions we can arrange 16 hyperspheres of radius 1/4 inside a
+    hypercube of side length 1 and place a hypersphere in the middle, so that
+    this hypersphere all the other 16 hyperspheres.
+
+    Obviously we can do this for increasing dimension $d$. What happens with the
+    blue hypersphere in the middle as d increases? Will it shrink? Will it be of
+    constant size? Will it grow outside the hypercube?
+    
+    (Hint: Check the diameter of the blue hypersphere in comparison to the
+    sidelength of the cube as d increases. This is actually not difficult to
+    compute, it may sound more complicated than it is).
+    \begin{figure}[htb]
+      \centering
+      \begin{minipage}[b]{0.45\columnwidth}
+        \centering
+        \centerline{\includegraphics[width=3cm]{./figs/fig1.pdf}}
+        \centerline{(a) 4 circles}\medskip
+      \end{minipage}
+      \hfill
+      \begin{minipage}[b]{0.45\columnwidth}
+        \centering
+        \centerline{\includegraphics[width=3cm]{./figs/fig2.pdf}}
+        \centerline{(b) 8 circles}\medskip
+      \end{minipage}
+      \caption{Circles in a cube.}
+      \label{fig:circles}
+    \end{figure}
+    
+    \vspace{10pt}
+      
+    \problemAnswer{
+    }
+    
+  \end{homeworkProblem}
+  
+  %----------------------------------------------------------------------------------------
+  % PROBLEM 3
+  %----------------------------------------------------------------------------------------
+  \begin{homeworkProblem}
+    Show that for every fixed dimension reduction matrix $\mathbf{A}$ of size
+    $k\times d$ with $k < d$, there exists vectors $\mathbf{x}, \mathbf{y} \in
+    \mathbb{R}^d$ such that the distance $\|\mathbf{Ax} - \mathbf{Ay}\|$ (no
+    matter which norm we use) is vastly different from $\|x - y\|$.
+    
+    \vspace{10pt}
+      
+    \problemAnswer{
+    }
+    
+  \end{homeworkProblem}
+  
+  
+  %----------------------------------------------------------------------------------------
+  % PROBLEM 4
+  %----------------------------------------------------------------------------------------
+  \begin{homeworkProblem}
+    The Yale Face Database contains images from various individuals in different
+    poses and under different lighting conditions. Some of the images are stored
+    in the file \texttt{SomeYaleFaces.mat}.
+    
+    Load this file into Matlab. The variable $\mathbf{X}$ is a matrix of size
+    $1024 \times 2414$.　Each column of $\mathbf{X}$ is an image of size $32
+    \times 32$ (in vectorized form). The 2414 columns are images of 38 different
+    persons in about 64 poses each. You can easily covert the $k$-th column of
+    $\mathbf{X}$ back to an image via the commands
+\begin{lstlisting}[language=Matlab]
+xk = X(:,k); xk = reshape(xk,32,32);
+\end{lstlisting} 
+    The command
+\begin{lstlisting}[language=Matlab]
+imagesc(x1); colormap(gray);
+\end{lstlisting}
+    will display the image.
+    
+    You can conveniently display multiple images if you want with the file
+    \texttt{showfaces.m}.
+    
+    We want to compare three dimension reduction methods by comparing how well
+    distances between the differen images are preserved: (i)
+    Johnson-Lindenstrauss projection, Fast Johnson Lindenstrauss projection and
+    simple random sampling (i.e., randomly picking $k$ indices).
+    
+    Choose different values for the reduced dimension $k$ and compare the
+    dimension reduction ability of the three methods. You need to think about
+    how to devise such an experiment. There are of course multiple options to do
+    so.
+    
+    \vspace{10pt}
+      
+    \problemAnswer{
+    }
+    
+  \end{homeworkProblem}
+  %\newpage
+  %\begin{appendices} 
+  %\end{appendices}
+  %\bibliographystyle{unsrt}
+  %\bibliography{refs}
+  
+  %----------------------------------------------------------------------------------------
+
+\end{document}

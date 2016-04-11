@@ -1,0 +1,18 @@
+# gedit backup file
+*~
+
+# texlipse
+tmp
+*.synctex.gz
+.project
+.texlipse
+.metadata
+raw
+*.png
+
+# Homework handouts and compiled pdf files
+*.pdf
+
+# Datasets
+SomeYaleFaces.mat
+showfaces.m

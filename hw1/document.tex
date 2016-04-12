@@ -367,7 +367,8 @@ imagesc(x1); colormap(gray);
       generated and applied to each of the 2414 images and the average error is
       plotted in Figure~\ref{fig:dimension_reduction}. As we can see, for small and
       moderate value of $k$, Fast Johnson-Lindenstrauss (FJL) significantly
-      outperform the other 2 dimension reduction schemes in terms of accuracy.
+      outperform the other 2 dimension reduction methods, which have almost the
+      same performance, in terms of accuracy.
       As $k\rightarrow 1024$, we notice that the Johnson-Lindenstrauss (JL)
       has a lower error rate than the other two methods. This is because JL
       strictly enforces orthogonal projection, while for FJL and random
@@ -376,7 +377,7 @@ imagesc(x1); colormap(gray);
       
       \begin{figure}[htb]
         \centering
-        \includegraphics[width=0.75\columnwidth]{figs/dimension_reduction.pdf}
+        \includegraphics[width=0.5\columnwidth]{figs/dimension_reduction.pdf}
         \caption{Comparison between Johnson-Lindenstrauss (JL) projection,
         Fast Johnson-Lindenstrauss (FJL) projection with fast walsh hadamard
         transform (FWHT) and random selection (RS).}

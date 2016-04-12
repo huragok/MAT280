@@ -211,6 +211,32 @@
     \vspace{10pt}
       
     \problemAnswer{
+      Assuming to random variables $\mathbf{x}, \mathbf{y}\in\mathbb{R}^d$ are
+      independently distributed. Also we assume that the $d$ entries of $X$
+      are all i.i.d with 0 mean and non-zero variance of $\sigma_x^2$, and the
+      $d$ entries of $Y$ are also i.i.d with 0 mean and non-zero variance of
+      $\sigma_y^2$.
+      Then the correlation coefficients between $\mathbf{x}$ and $\mathbf{y}$ is
+      \begin{align}
+        \rho & = \frac{\mathbf{x}^T\mathbf{y}}
+        {\|\mathbf{x}\|_2^{1/2}\|\mathbf{y}\|_2^{1/2}} =
+        \frac{\frac{1}{d}\sum_{i=1}^d x_iy_i} {\left(\frac{1}{d}\sum_{i=1}^d
+        x_i^2\right)^{1/2} \left(\frac{1}{d}\sum_{i=1}^d y_i^2\right)^{1/2}}
+      \end{align}
+      
+      According to the strong law of large number, as $d\rightarrow \infty$ we
+      have
+      \begin{align}
+        \frac{1}{d}\sum_{i=1}^d x_iy_i \overset{a.s.}{\to} 0,\;
+        \frac{1}{d}\sum_{i=1}^d x_i^2 \overset{a.s.}{\to} \sigma_x^2,\;
+        \frac{1}{d}\sum_{i=1}^d y_i^2 \overset{a.s.}{\to} \sigma_y^2,\;
+      \end{align}
+      According to the continuous mapping theorem, we have 
+      \begin{align}
+        \rho \overset{a.s.}{\to} \frac{0}{\sqrt{\sigma_x^2\sigma_y^2}} = 0
+      \end{align}
+      which means $\mathbf{x}$ and $\mathbf{y}$ are orthogonal almost surely as
+      $d\rightarrow \infty$.
     }
   \end{homeworkProblem}
   %\clearpage
@@ -262,6 +288,12 @@
     \vspace{10pt}
       
     \problemAnswer{
+      In a unit cube of dimension $d$, the centers of the corner balls are in
+      $[\pm 1/4, \ldots, \pm 1/4]^T$, of which the distances w.r.t the origin is
+      $d_c = \sqrt{d}/4$. Consequently, the radius of the center ball which
+      touches all the corner balls is $r = d_c - 1/4 = \sqrt{d}/4 - 1/4$, which
+      apprarently increases as $d$ increases. Since the unit cube has a fixed
+      edge length of 1, the centerball will grow outside the cube.
     }
     
   \end{homeworkProblem}
@@ -273,13 +305,21 @@
     Show that for every fixed dimension reduction matrix $\mathbf{A}$ of size
     $k\times d$ with $k < d$, there exists vectors $\mathbf{x}, \mathbf{y} \in
     \mathbb{R}^d$ such that the distance $\|\mathbf{Ax} - \mathbf{Ay}\|$ (no
-    matter which norm we use) is vastly different from $\|x - y\|$.
+    matter which norm we use) is vastly different from $\|\mathbf{x} -
+    \mathbf{y}\|$.
     
     \vspace{10pt}
       
     \problemAnswer{
+      Since $k < d$, there always exists $(\mathbf{x} -
+      \mathbf{y})\in \mathrm{null}(\mathbf{A})$ and $(\mathbf{x} -
+      \mathbf{y})\not=\mathbf{0}$. Consequently, $\forall N>0$ and
+      under arbitrary norm, there exists $\mathbf{x}, \mathbf{y}$ such that
+      \begin{align}
+      \|\mathbf{x} - \mathbf{y}\| > N,\; \|\mathbf{Ax} - \mathbf{Ay}\| = 0.
+      \end{align}
+      thus they are vastly different.
     }
-    
   \end{homeworkProblem}
   
   
@@ -310,8 +350,8 @@ imagesc(x1); colormap(gray);
     
     We want to compare three dimension reduction methods by comparing how well
     distances between the differen images are preserved: (i)
-    Johnson-Lindenstrauss projection, Fast Johnson Lindenstrauss projection and
-    simple random sampling (i.e., randomly picking $k$ indices).
+    Johnson-Lindenstrauss projection, (ii) Fast Johnson Lindenstrauss projection
+    and (iii) simple random sampling (i.e., randomly picking $k$ indices).
     
     Choose different values for the reduced dimension $k$ and compare the
     dimension reduction ability of the three methods. You need to think about
@@ -321,14 +361,40 @@ imagesc(x1); colormap(gray);
     \vspace{10pt}
       
     \problemAnswer{
+      To compare the accuracy of the three dimension reduction methods, we adopt
+      Sammon's stress measure~\cite[Eq.(1)]{sammon1969nonlinear}. For each
+      dimension reduction scheme, $N=20$ sets of random matrices/selections are
+      generated and applied to each of the 2414 images and the average error is
+      plotted in Figure~\ref{fig:dimension_reduction}. As we can see, for small and
+      moderate value of $k$, Fast Johnson-Lindenstrauss (FJL) significantly
+      outperform the other 2 dimension reduction schemes in terms of accuracy.
+      As $k\rightarrow 1024$, we notice that the Johnson-Lindenstrauss (JL)
+      has a lower error rate than the other two methods. This is because JL
+      strictly enforces orthogonal projection, while for FJL and random
+      selection (RS) the random seletion of $k$ rows does not guarantee
+      orthogonality.
+      
+      \begin{figure}[htb]
+        \centering
+        \includegraphics[width=0.75\columnwidth]{figs/dimension_reduction.pdf}
+        \caption{Comparison between Johnson-Lindenstrauss (JL) projection,
+        Fast Johnson-Lindenstrauss (FJL) projection with fast walsh hadamard
+        transform (FWHT) and random selection (RS).}
+        \label{fig:dimension_reduction}
+    \end{figure}
+        
+      The matlab code for this simulation is as follows:
+      \lstinputlisting[language=Matlab]{hw1_4.m}
+      \lstinputlisting[language=Matlab]{get_dist.m}
+      \lstinputlisting[language=Matlab]{get_error.m}
     }
     
   \end{homeworkProblem}
   %\newpage
   %\begin{appendices} 
   %\end{appendices}
-  %\bibliographystyle{unsrt}
-  %\bibliography{refs}
+  \bibliographystyle{unsrt}
+  \bibliography{refs}
   
   %----------------------------------------------------------------------------------------
 

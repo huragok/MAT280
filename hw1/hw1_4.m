@@ -23,7 +23,7 @@ for i_k = 1 : length(k)
     P = randn(d, k(i_k), n_sample);
     for i_sample = 1 : n_sample
        P_tmp = orth(P(:, :, i_sample))';
-       X_proj_jl = P_tmp * X;
+       X_proj_jl = sqrt(d / k(i_k)) * P_tmp * X;
        dist_tmp = get_dist(X_proj_jl);
        e_jl(i_k) = e_jl(i_k) + get_error(dist, dist_tmp);
     end
@@ -34,7 +34,11 @@ for i_k = 1 : length(k)
     
     % Fast Johnson Lindenstrauss projection
     sign = 2 * randi(2, d, n_sample) - 3;
-    idx_col = randi(d, k(i_k), n_sample);
+    idx_col = zeros(k(i_k), n_sample);
+    for i_sample = 1 : n_sample
+        idx_col(:, i_sample) = randperm(d, k(i_k))';
+    end
+
     for i_sample = 1 : n_sample
         X_proj_fjl = d / sqrt(k(i_k)) * fwht(diag(sign(:, i_sample)) * X);
         X_proj_fjl = X_proj_fjl(idx_col(:, i_sample), :);
@@ -48,9 +52,8 @@ for i_k = 1 : length(k)
     tic;
     
     % Random sampling
-    idx_col = randi(d, k(i_k), n_sample);
     for i_sample = 1 : n_sample
-        X_proj_rs = X(idx_col(:, i_sample), :);
+        X_proj_rs = sqrt(d / k(i_k)) * X(idx_col(:, i_sample), :);
         
         dist_tmp = get_dist(X_proj_rs);
         e_rs(i_k) = e_rs(i_k) + get_error(dist, dist_tmp);

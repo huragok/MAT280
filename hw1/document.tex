@@ -57,7 +57,7 @@
 % Set up the header and footer
 \pagestyle{fancy}
 \lhead{\hmwkAuthorName} % Top left header
-\chead{\hmwkClass\ (\hmwkClassInstructor\ \hmwkClassTime): \hmwkTitle} % Top center header
+\chead{\hmwkClass\: \hmwkTitle} % Top center header
 \rhead{\firstxmark} % Top right header
 \lfoot{\lastxmark} % Bottom left footer
 \cfoot{} % Bottom center footer
@@ -365,15 +365,11 @@ imagesc(x1); colormap(gray);
       Sammon's stress measure~\cite[Eq.(1)]{sammon1969nonlinear}. For each
       dimension reduction scheme, $N=20$ sets of random matrices/selections are
       generated and applied to each of the 2414 images and the average error is
-      plotted in Figure~\ref{fig:dimension_reduction}. As we can see, for small and
-      moderate value of $k$, Fast Johnson-Lindenstrauss (FJL) significantly
-      outperform the other 2 dimension reduction methods, which have almost the
-      same performance, in terms of accuracy.
-      As $k\rightarrow 1024$, we notice that the Johnson-Lindenstrauss (JL)
-      has a lower error rate than the other two methods. This is because JL
-      strictly enforces orthogonal projection, while for FJL and random
-      selection (RS) the random seletion of $k$ rows does not guarantee
-      orthogonality.
+      plotted in Figure~\ref{fig:dimension_reduction}. As we can see, the
+      Johnson-Lindenstrauss (JL) method, the Fast Johnson-Lindenstrauss (FJL)
+      methohd and the random selection (RS) method has approximatedly the same
+      performance in terms of accuracy. As $k\rightarrow 1024$, the error of all
+      the three methods approaches 0.
       
       \begin{figure}[htb]
         \centering

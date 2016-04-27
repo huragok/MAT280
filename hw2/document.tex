@@ -1,0 +1,311 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Structured General Purpose Assignment
+% LaTeX Template
+%
+% This template has been downloaded from:
+% http://www.latextemplates.com
+%
+% Original author:
+% Ted Pavlic (http://www.tedpavlic.com)
+%
+% Note:
+% The \lipsum[#] commands throughout this template generate dummy text
+% to fill the template out. These commands should all be removed when 
+% writing assignment content.
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------------------------------------
+% PACKAGES AND OTHER DOCUMENT CONFIGURATIONS
+%----------------------------------------------------------------------------------------
+
+\documentclass{article}
+
+\usepackage{fancyhdr} % Required for custom headers
+\usepackage{lastpage} % Required to determine the last page for the footer
+\usepackage{extramarks} % Required for headers and footers
+\usepackage{graphicx} % Required to insert images
+\usepackage{lipsum} % Used for inserting dummy 'Lorem ipsum' text into the template
+\usepackage{amsmath, amsfonts, bm, physics}
+\usepackage{xcolor}
+\usepackage{listings}
+\usepackage{hyperref}
+\usepackage[toc,page]{appendix}
+
+\lstset{
+    %numbers=left,
+    stepnumber=1,    
+    firstnumber=1,
+    numberfirstline=true,
+    basicstyle=\ttfamily,
+    keywordstyle=\color{blue}\ttfamily,
+    stringstyle=\color{red}\ttfamily,
+    commentstyle=\color{green}\ttfamily,
+    breaklines=true,
+}
+
+% Margins
+\topmargin=-0.45in
+\evensidemargin=0in
+\oddsidemargin=0in
+\textwidth=6.5in
+\textheight=9.0in
+\headsep=0.25in 
+
+\linespread{1.1} % Line spacing
+
+% Set up the header and footer
+\pagestyle{fancy}
+\lhead{\hmwkAuthorName} % Top left header
+\chead{\hmwkClass\: \hmwkTitle} % Top center header
+\rhead{\firstxmark} % Top right header
+\lfoot{\lastxmark} % Bottom left footer
+\cfoot{} % Bottom center footer
+\rfoot{Page\ \thepage\ of\ \pageref{LastPage}} % Bottom right footer
+\renewcommand\headrulewidth{0.4pt} % Size of the header rule
+\renewcommand\footrulewidth{0.4pt} % Size of the footer rule
+
+\setlength\parindent{0pt} % Removes all indentation from paragraphs
+
+%----------------------------------------------------------------------------------------
+% DOCUMENT STRUCTURE COMMANDS
+% Skip this unless you know what you're doing
+%----------------------------------------------------------------------------------------
+
+% Header and footer for when a page split occurs within a problem environment
+\newcommand{\enterProblemHeader}[1]{
+  \nobreak\extramarks{#1}{#1 continued on next page\ldots}\nobreak
+  \nobreak\extramarks{#1 (continued)}{#1 continued on next page\ldots}\nobreak
+}
+
+% Header and footer for when a page split occurs between problem environments
+\newcommand{\exitProblemHeader}[1]{
+  \nobreak\extramarks{#1 (continued)}{#1 continued on next page\ldots}\nobreak
+  \nobreak\extramarks{#1}{}\nobreak
+}
+
+\setcounter{secnumdepth}{0} % Removes default section numbers
+\newcounter{homeworkProblemCounter} % Creates a counter to keep track of the number of problems
+
+\newcommand{\homeworkProblemName}{}
+\newenvironment{homeworkProblem}[1][Problem \arabic{homeworkProblemCounter}]{ % Makes a new environment called homeworkProblem which takes 1 argument (custom name) but the default is "Problem #"
+    \stepcounter{homeworkProblemCounter} % Increase counter for number of
+% problems
+    \renewcommand{\homeworkProblemName}{#1} % Assign \homeworkProblemName the
+% name of the problem
+    \section{\homeworkProblemName} % Make a section in the document with the
+% custom problem count
+    \enterProblemHeader{\homeworkProblemName} % Header and footer within the
+% environment
+}{
+    \exitProblemHeader{\homeworkProblemName} % Header and footer after the
+% environment
+}
+
+\newcommand{\problemAnswer}[1]{ % Defines the problem answer command with the content as the only argument
+    \noindent\textbf{\emph{Answer: }}#1 % Just put a keyword Answer in
+    % bold/italic at the beginning
+}
+
+\newcommand{\homeworkSectionName}{}
+\newenvironment{homeworkSection}[1]{ % New environment for sections within homework problems, takes 1 argument - the name of the section
+    \renewcommand{\homeworkSectionName}{#1} % Assign \homeworkSectionName to the
+% name of the section from the environment argument
+    \subsection{\homeworkSectionName} % Make a subsection with the custom name
+% of the subsection
+    \enterProblemHeader{\homeworkProblemName\ [\homeworkSectionName]} % Header
+% and footer within the environment
+}{
+    \enterProblemHeader{\homeworkProblemName} % Header and footer after the
+% environment
+}
+
+\newtheorem{theorem}{Theorem}[homeworkProblemCounter]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollary}
+
+\newenvironment{proof}[1][Proof]{
+  \begin{trivlist}
+    \item[\hskip \labelsep {\bfseries #1}]}{
+  \end{trivlist}
+}
+\newenvironment{definition}[1][Definition]{
+  \begin{trivlist}
+    \item[\hskip \labelsep {\bfseries #1}]}{
+  \end{trivlist}
+}
+
+\newenvironment{example}[1][Example]{
+  \begin{trivlist}
+    \item[\hskip \labelsep {\bfseries #1}]}{
+  \end{trivlist}
+}
+    
+\newenvironment{remark}[1][Remark]{
+  \begin{trivlist}
+    \item[\hskip \labelsep {\bfseries #1}]}{
+  \end{trivlist}
+}
+
+\newcommand{\qed}{
+  \nobreak \ifvmode \relax \else
+  \ifdim\lastskip<1.5em \hskip-\lastskip
+  \hskip1.5em plus0em minus0.5em \fi \nobreak
+  \vrule height0.75em width0.5em depth0.25em\fi
+}
+
+\lstset{
+  frame=single,
+  breaklines=true,
+  postbreak=\raisebox{0ex}[0ex][0ex]{\ensuremath{\color{red}\hookrightarrow\space}}
+}
+   
+%----------------------------------------------------------------------------------------
+% NAME AND CLASS SECTION
+%----------------------------------------------------------------------------------------
+
+\newcommand{\hmwkTitle}{Assignment\ \#2} % Assignment title
+\newcommand{\hmwkDueDate}{Monday, May\ 2,\ 2016} % Due date
+\newcommand{\hmwkClass}{MAT\ 280} % Course/class
+\newcommand{\hmwkClassTime}{MF 13:30 - 15:00} % Class/lecture time
+\newcommand{\hmwkClassInstructor}{Prof. Thomas Strohmer} % Teacher/lecturer
+\newcommand{\hmwkAuthorName}{Wenhao Wu} % Your name
+
+%----------------------------------------------------------------------------------------
+% TITLE PAGE
+%----------------------------------------------------------------------------------------
+
+\title{
+  \vspace{2in}
+  \textmd{\textbf{\hmwkClass:\ \hmwkTitle}}\\
+  \normalsize\vspace{0.1in}\small{Due\ on\ \hmwkDueDate}\\
+  \vspace{0.1in}\large{\textit{\hmwkClassInstructor\ \hmwkClassTime}}
+  \vspace{3in}
+}
+
+\author{\textbf{\hmwkAuthorName}}
+\date{} % Insert date here if you want it to appear below your name
+
+%----------------------------------------------------------------------------------------
+
+\begin{document}
+
+  \maketitle
+  
+  %----------------------------------------------------------------------------------------
+  % TABLE OF CONTENTS
+  %----------------------------------------------------------------------------------------
+  
+  %\setcounter{tocdepth}{1} % Uncomment this line if you don't want subsections listed in the ToC
+  
+  \newpage
+  \tableofcontents
+  \newpage
+  
+  %----------------------------------------------------------------------------------------
+  % PROBLEM 1
+  %----------------------------------------------------------------------------------------
+  \begin{homeworkProblem}
+    Let $i = \sqrt{-1}$ and set
+    \begin{align}
+      \mathbf{A}= \left[
+    	 \begin{array}{ccc}
+    	   i & 0 & -i \\
+    	   0 & i & -i
+    	 \end{array}
+    	\right]. \notag
+    \end{align}
+    Using the null space property, show that $l_1$-minimization will recover any
+    1-sparse vector $\mathbf{x}$, given $\mathbf{Ax} = \mathbf{y}$.
+    \vspace{10pt}
+      
+    \problemAnswer{
+      
+    }
+  \end{homeworkProblem}
+  %\clearpage
+  
+  %----------------------------------------------------------------------------------------
+  % PROBLEM 2
+  %----------------------------------------------------------------------------------------
+  \begin{homeworkProblem}
+    On the connection between (in)coherence parameter $\mu$ and restricted
+    isometry constant $\delta_s$: Show that $\delta_1 = 0$, $\delta_2$ = $\mu$,
+    and $\delta_s \leq (s-1)\mu$.
+    
+    \vspace{10pt}
+      
+    \problemAnswer{
+      
+    }
+    
+  \end{homeworkProblem}
+  
+  %----------------------------------------------------------------------------------------
+  % PROBLEM 3
+  %----------------------------------------------------------------------------------------
+  \begin{homeworkProblem}
+    Let $\mathbf{A}\in \mathbb{R}^{k\times d}$ be a Gaussian random matrix.
+    Give an estimate for the coherence $\mathbf{\mu}$ of $\mathbf{A}$.
+    
+    \vspace{10pt}
+      
+    \problemAnswer{
+      
+    }
+  \end{homeworkProblem}
+  
+  
+  %----------------------------------------------------------------------------------------
+  % PROBLEM 4
+  %----------------------------------------------------------------------------------------
+  \begin{homeworkProblem}
+    Consider $\mathbf{y} = \mathbf{Ax}$, where $\mathbf{A}$ is a $100\times 400$
+    Gaussian random matrix and $\mathbf{x}$ is an $s$-sparse vector of length
+    400. The locations of the non-zero entries of $\mathbf{x}$ are chosen
+    uniformly at random and the non-zero coefficients of $\mathbf{x}$ are
+    normal-distributed. For $s = 1, 2,\ldots$, solve
+    \begin{align}
+      \min_{\mathbf{z}}\|\mathbf{z}\|_1,\; \mbox{subject to } \mathbf{Az} =
+      \mathbf{y},
+    \end{align}
+    (e.g. using the toolbox CVX). For each fixed $s$ repeat the experiment 10
+    times. Create a graph plotting $s$ versus the relative reconstruction error
+    (averaged over the ten experiments for each $s$). Starting with which value
+    of $s$ (approximately) does $l_1$-minimization fail to recover $\mathbf{x}$?
+    \vspace{10pt}
+      
+    \problemAnswer{
+      
+    }
+    
+  \end{homeworkProblem}
+  
+  %----------------------------------------------------------------------------------------
+  % PROBLEM 5
+  %----------------------------------------------------------------------------------------
+  \begin{homeworkProblem}
+    Same setup as in Problem 4, but now the non-zero entries of $\mathbf{x}$ are
+    non-negative. Taking this information into account, we now solve
+    \begin{align}
+      \min_{\mathbf{z}}\|\mathbf{z}\|_1,\; \mbox{subject to } \mathbf{Az} =
+      \mathbf{y}\,\mbox{and}\,\mathbf{z}\geq \mathbf{0}
+    \end{align}
+    (here, $\mathbf{z}\geq \mathbf{0}$ is meant entrywise, i.e., for each $k$:
+    $z_k \geq 0$). (The positivity constraint is easy to include in CVX).
+    Repeat the simulations as described in Problem 4. Compare your findings to
+    the results from your experiments of Problem 4 and try to quantify the
+    difference regarding the range for $\mathbf{s}$ for which recovery is still
+    possible in this case.
+  \end{homeworkProblem}
+  
+  %\newpage
+  %\begin{appendices} 
+  %\end{appendices}
+  %$\bibliographystyle{unsrt}
+  %\bibliography{refs}
+  
+  %----------------------------------------------------------------------------------------
+
+\end{document}

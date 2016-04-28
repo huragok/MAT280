@@ -333,6 +333,7 @@
     \begin{align}
       \min_{\mathbf{z}}\|\mathbf{z}\|_1,\; \mbox{subject to } \mathbf{Az} =
       \mathbf{y},
+      \label{eq:l1}
     \end{align}
     (e.g. using the toolbox CVX). For each fixed $s$ repeat the experiment 10
     times. Create a graph plotting $s$ versus the relative reconstruction error
@@ -341,9 +342,118 @@
     \vspace{10pt}
       
     \problemAnswer{
+      The relative error
+      \begin{align}
+        \epsilon = \frac{\|\hat{\mathbf{z}} -
+        \mathbf{x}\|_2^2}{\|\mathbf{x}\|_2^2}
+      \end{align}
+      are evaluated with 100 randomly generated $\mathbf{A}$ and $\mathbf{x}$
+      for each $s$, where $\mathbf{z}$ is the solution of the
+      $l_1$-minimimization problem~\eqref{eq:l1} or the
+      $l_1$-non-negative-minimization problem~\eqref{eq:l1_nn} computed using
+      CVXPY. The mean and stand-deviation of $\epsilon$ are plotted in
+      Fig.~\ref{fig:error}. The two problems start to fail to recover
+      $\mathbf{x}$ from $s=20$ and $s=27$, respectively. It appears that
+      $l_1$-non-negative-minimization can recover $\mathbf{x}$ over a larger
+      range than $l_1$-minimization.
       
+      \begin{figure}[htb]
+        \centering
+        \includegraphics[width=0.7\columnwidth]{figs/error.pdf}
+        \caption{The mean and standard deviation of the error for the
+        $l1$-minimizaion problem (left) and the $l1$-non-negative-minimizaion
+        problem (right).}
+        \label{fig:error}
+      \end{figure}
+      
+      The python code for this simulation is as follows:
+
     }
+\begin{lstlisting}[language=Python]
+import numpy as np
+import scipy as sp
+import cvxpy as cvx
+
+import timeit
+import sys
+from IPython.display import clear_output
+
+N = 100 # Number of repetition
+k = 100
+d = 400
+
+s_range = np.arange(1, 51, dtype="int32") # range of s
+
+A = np.random.randn(k, d, N)
+
+err = np.zeros([len(s_range), N], dtype="float64") # The relative error for l1-minimization
+err_nn = np.zeros([len(s_range), N], dtype="float64") # The relative error for non-neg l1-minimization
+
+for idx, s in enumerate(s_range):
+    X = np.random.randn(s, N)
+    err_tmp = np.zeros(N, dtype="float64")
+    for n in range(N):
+        S = np.random.choice(d, s, replace = False) # Uniformly choose the locations of non-zero elements
+        
+        x = np.zeros(d, dtype="float64")
+        x[S] = X[:, n]
+        y = np.dot(A[:, :, n], x)
+        z = cvx.Variable(d)
+        prob = cvx.Problem(cvx.Minimize(cvx.norm(z, 1)), [A[:, :, n] * z == y,])
+        prob.solve()
+        err[idx, n] = (np.linalg.norm(z.value.flatten() - x) ** 2) / (np.linalg.norm(x) ** 2)
+        
+        x = np.zeros(d, dtype="float64")
+        x[S] = np.absolute(X[:, n])
+        y = np.dot(A[:, :, n], x)
+        z = cvx.Variable(d)
+        prob = cvx.Problem(cvx.Minimize(cvx.norm(z, 1)), [A[:, :, n] * z == y, z >= 0])
+        prob.solve()
+        err_nn[idx, n] = (np.linalg.norm(z.value.flatten() - x) ** 2) / (np.linalg.norm(x) ** 2)
+        
+    #process.stdout
+    clear_output()
+    print("s={0}, err={1}, err_nn={2}".format(s, err[idx, :].mean(), err_nn[idx, :].mean()))
+    sys.stdout.flush()
     
+err_mean = err.mean(axis = 1)
+err_std = err.std(axis = 1)
+
+err_nn_mean = err_nn.mean(axis = 1)
+err_nn_std = err_nn.std(axis = 1)
+
+threshold = 1e-10
+idx_nz = np.where(err_mean > threshold)[0].min() # The first non-zero position
+idx_nn_nz = np.where(err_nn_mean > threshold)[0].min()
+
+import matplotlib as mpl
+import matplotlib.pyplot as plt
+%matplotlib inline
+
+axis_font = {'size':'20'}
+mpl.rcParams['xtick.labelsize'] = 16
+mpl.rcParams['ytick.labelsize'] = 16
+
+fig, axs = plt.subplots(1, 2, sharey=True, sharex=True, figsize=(10, 5))
+
+axs[0].plot(s_range, err_mean, 'blue', linewidth=2, label="$l_1$")
+axs[0].fill_between(s_range, err_mean-err_std, err_mean+err_std, facecolor='lightblue')
+axs[0].axvline(s_range[idx_nz], color='blue', linestyle='--', linewidth=2)
+axs[0].legend(prop={'size':16}, loc=2)
+axs[0].grid()
+axs[0].set_xlabel('$s$', **axis_font)
+axs[0].set_ylabel('error', **axis_font)
+
+axs[1].plot(s_range, err_nn_mean, 'red', linewidth=2, label="$l_1$-nneg")
+axs[1].fill_between(s_range, err_nn_mean-err_nn_std, err_nn_mean+err_nn_std, facecolor='salmon')
+axs[1].axvline(s_range[idx_nn_nz], color='red', linestyle='--', linewidth=2)
+axs[1].legend(prop={'size':16}, loc=2)
+axs[1].grid()
+axs[1].set_xlabel('$s$', **axis_font)
+axs[1].set_ylabel('error', **axis_font)
+
+fig.savefig('error.pdf', dpi=10, bbox_inches='tight')
+\end{lstlisting}
   \end{homeworkProblem}
   
   %----------------------------------------------------------------------------------------
@@ -355,6 +465,7 @@
     \begin{align}
       \min_{\mathbf{z}}\|\mathbf{z}\|_1,\; \mbox{subject to } \mathbf{Az} =
       \mathbf{y}\,\mbox{and}\,\mathbf{z}\geq \mathbf{0}
+      \label{eq:l1_nn}
     \end{align}
     (here, $\mathbf{z}\geq \mathbf{0}$ is meant entrywise, i.e., for each $k$:
     $z_k \geq 0$). (The positivity constraint is easy to include in CVX).
@@ -362,6 +473,12 @@
     the results from your experiments of Problem 4 and try to quantify the
     difference regarding the range for $\mathbf{s}$ for which recovery is still
     possible in this case.
+    
+    \vspace{10pt}
+      
+    \problemAnswer{
+      See Problem 4.
+    }
   \end{homeworkProblem}
   
   %\newpage

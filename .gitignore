@@ -16,3 +16,6 @@ raw
 # Datasets
 SomeYaleFaces.mat
 showfaces.m
+
+# notebook
+.ipynb_checkpoints/

@@ -31,6 +31,7 @@
 \usepackage{listings}
 \usepackage{hyperref}
 \usepackage[toc,page]{appendix}
+\usepackage{steinmetz}
 
 \lstset{
     %numbers=left,
@@ -221,7 +222,17 @@
     \vspace{10pt}
       
     \problemAnswer{
-      
+      The null space of $\mathbf{A}$ is $\{[1, 1, 1]^H\}$,
+      therefore for any $\|\mathcal{S}\| = 1$ and any
+      $\mathbf{h}\in\mbox{null}(\mathbf{A})\backslash \{0\}$ we have
+      \begin{align}
+        \|\mathbf{h}_{\mathcal{S}^C}\|_1 = 2\|\mathbf{h}_{\mathcal{S}}\|_1 > 0
+      \end{align}
+      which suggests $\|\mathbf{h}_{\mathcal{S}^C}\|_1 >
+      \|\mathbf{h}_{\mathcal{S}}\|_1$, therefore $\mathbf{A}$ satisfies the
+      nullspace property w.r.t all $\mathcal{S}$ satisfying $|\mathcal{S}|
+      \leq 1$. Consequently, $l_1$-minimization will recover any 1-sparse
+      vector $\mathbf{x}$.
     }
   \end{homeworkProblem}
   %\clearpage
@@ -237,7 +248,60 @@
     \vspace{10pt}
       
     \problemAnswer{
-      
+      Denote $\mathbf{A}\in\mathbb{C}^{k\times d}$ as a matrix with unit 2-norm
+      columns $\mathbf{a}_1,\ldots,\mathbf{a}_d$. For 1-sparse vector
+      $\mathbf{x}$, assuming $x_i \not= 0$, we have
+      \begin{align}
+        \|\mathbf{Ax}\|_2^2 = \|x_i\mathbf{a}_i\|_2^2 = |x_i|^2 =
+        \|\mathbf{x}\|_2^2,
+      \end{align}
+      therefore $\delta_1 = 0$. For 2-sparse vector $\mathbf{x}$, assuming $x_i
+      \not= 0$, $x_j\not=0$, $i\not=j$, we have 
+      \begin{align}
+        \|\mathbf{Ax}\|_2^2 = \|x_i\mathbf{a}_i + x_j\mathbf{a}_j\|_2^2 =
+        |x_i|^2 + |x_j|^2 + 2\Re{x_ix_j^*\langle\mathbf{a}_i, \mathbf{a}_j
+        \rangle},
+      \end{align}
+      Since 
+      \begin{subequations}
+        \begin{align}
+          2\Re{x_ix_j^*\langle\mathbf{a}_i, \mathbf{a}_j \rangle} & \leq
+          (|x_i|^2 + |x_j|^2)|\langle\mathbf{a}_i, \mathbf{a}_j\rangle|, \\
+          2\Re{x_ix_j^*\langle\mathbf{a}_i, \mathbf{a}_j \rangle} & \geq
+          -(|x_i|^2 + |x_j|^2)|\langle\mathbf{a}_i, \mathbf{a}_j\rangle|,
+        \end{align}
+      \end{subequations}
+      where equalities hold if and only if $x_j =
+      \pm|x_i|\exp(i\arg\langle\mathbf{a}_i, \mathbf{a}_j\rangle)$,
+      respectively. Consequently, we have
+      \begin{subequations}
+        \begin{align}
+          \|\mathbf{Ax}\|_2^2
+          & \leq (1 + |\langle\mathbf{a}_i, \mathbf{a}_j\rangle|)
+          \|\mathbf{x}\|_2^2 \leq (1 + \mu) \|\mathbf{x}\|_2^2 \\
+          \|\mathbf{Ax}\|_2^2
+          & \geq (1 - |\langle\mathbf{a}_i, \mathbf{a}_j\rangle|)
+          \|\mathbf{x}\|_2^2 \geq (1 - \mu) \|\mathbf{x}\|_2^2
+        \end{align}
+      \end{subequations}
+      therefore $\delta_2 = \mu$. For $s$-sparse vector $\mathbf{x}$, assuming
+      its support is $\mathcal{S} = \{i_1,\ldots,i_s\}$. We have
+      \begin{align}
+        \|\mathbf{Ax}\|_2^2  & = \left\|\sum_{p=1}^sx_p\mathbf{a}_p \right\|_2^2
+        \notag\\
+        &= \sum_{p=1}^s|x|_{i_p}^2 + \sum_{p=1}^{s-1}\sum_{q =
+        p+1}^{s} 2\Re{x_{i_p}x_{i_q}^*\langle\mathbf{a}_{i_p}, \mathbf{a}_{i_q}
+        \rangle} \notag\\
+        & \leq  \sum_{p=1}^s|x|_{i_p}^2 + \sum_{p=1}^{s-1}\sum_{q = p+1}^{s}
+        (|x_{i_p}|^2 + |x_{i_q}|^2)|\langle\mathbf{a}_{i_p},
+        \mathbf{a}_{i_q}\rangle| \notag\\
+        & \leq \sum_{p=1}^s|x|_{i_p}^2 + \mu\sum_{p=1}^{s-1}\sum_{q = p+1}^{s}
+        (|x_{i_p}|^2 + |x_{i_q}|^2) \notag\\
+        & = (1 + (s-1)\mu)\|\mathbf{x}\|_2^2
+      \end{align}
+      Similarly, we can prove that $\|\mathbf{Ax}\|_2^2 \geq (1 -
+      (s-1)\mu)\|\mathbf{x}\|_2^2$. Consequently, we have $\delta_s \leq
+      (s-1)\mu$.
     }
     
   \end{homeworkProblem}
@@ -252,8 +316,8 @@
     \vspace{10pt}
       
     \problemAnswer{
-      
-    }
+      Assume that $A_{ij}\sim\mathcal{N}(0, 1)$ identically and independently,
+      $i=1,\ldots,k$, $j=1,\ldots,d$ }
   \end{homeworkProblem}
   
   

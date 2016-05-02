@@ -317,7 +317,25 @@
       
     \problemAnswer{
       Assume that $A_{ij}\sim\mathcal{N}(0, 1)$ identically and independently,
-      $i=1,\ldots,k$, $j=1,\ldots,d$ }
+      $i=1,\ldots,k$, $j=1,\ldots,d$. After normalizing $\mathbf{A}$ so that
+      each column has unit 2-norm, from Problem 1 of Homework 1 we have
+      \begin{align}
+        \langle \mathbf{a}_i, \mathbf{a}_j \rangle \leq
+        \frac{\epsilon}{1-\epsilon}
+      \end{align}
+      with probability at least $1 - 6\exp \left(-{k\epsilon^2}/{\alpha\log
+      k} \right) - 2k^{-\alpha+1}$ for $\alpha > 1$. Consequently, with union
+      bound, we have
+      \begin{align}
+        \mathbb{P}\left(\mu \leq \frac{\epsilon}{1 - \epsilon}\right) & = 1 -
+        \mathbb{P}\left(\max_{i\not=j} \langle \mathbf{a}_i, \mathbf{a}_j
+        \rangle > \frac{\epsilon}{1 - \epsilon}\right) \notag \\
+        & \geq 1 - \sum_{i\not=j} \mathbb{P}\left(\langle \mathbf{a}_i, \mathbf{a}_j
+        \rangle > \frac{\epsilon}{1 - \epsilon}\right) \notag \\
+        & \geq 1 - d(d-1)\left[ 3\exp \left(-{k\epsilon^2}/{\alpha\log
+        k} \right) + k^{-\alpha+1}\right].
+      \end{align}
+    }
   \end{homeworkProblem}
   
   

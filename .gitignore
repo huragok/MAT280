@@ -16,6 +16,9 @@ raw
 # Datasets
 SomeYaleFaces.mat
 showfaces.m
+crescents.mat
+gen2vec.m
+genomedata.mat
 
 # notebook
 .ipynb_checkpoints/

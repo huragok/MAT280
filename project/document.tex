@@ -66,7 +66,7 @@
 \usepackage{bm}
 \usepackage{amsthm}
 \newtheorem{proposition}{Proposition}
-
+\usepackage{animate}
 
 
 % Some very useful LaTeX packages include:
@@ -476,8 +476,8 @@
 % then two-way relay
 \IEEEPARstart{W}{ith} the availability of a wide range of public civic data
 sets and open source tools for data science, nowadays anyone with a fundamental
-knowledge/experience on statistics, programming is well-equipped to ``learn''
-about a city in various aspects, a realm used to be dominated primarily by
+knowledge/experience on statistics and programming is well-equipped to
+``learn'' about a city in various aspects, a realm used to be dominated primarily by
 professional data scientists and/or urban planners. In this work, we consider
 the general problem of identifying the ``active'' neighborhoods in NYC during
 the night time. An answer to it can be made use of, for example, by
@@ -491,15 +491,20 @@ get a more quantative, founded and potentially more useful answer, we take a
 rigorous approach to look for it from the (NYC) Taxi \& Limousine Commission
 (TLC) Trip Record Data~\cite{nyctlc} during 2014 and the 2010 NYC Census Tracts
 (CTs) maps~\cite{nyc2010ct}. The number of taxi pickup and dropoffs per hour are
-used as an indicator on how active each CT is. With a simple unsupervised
-learning technique, namely spectral clustering, as well as straightforward
-visualization results, we successfully review the distinct ``day-time'' and
-``night-time'' neighborhoods of NYC.
+used as an indicator on how active each CT is. Most analysis on
+similar datasets are based on supervised learning, such as the MIT 2013-2014 Big
+Data Challenge~\cite{mit2013bigdata}, a related course
+project~\cite{grinberg2014predicting}, as well as the recent algorithm
+competition by DiDi Research~\cite{didi2016algorithm}. On the contrary, our
+analysis is primarily based on a simple but effective unsupervised learning
+technique, namely spectral clustering. With straightforward visualization
+results, we successfully reveal the distinct ``day-time'' and ``night-time''
+neighborhoods of NYC.
 
 The rest of this report is organized as follows. Section II introduces the data
 sets and techniques we used to clean and import the data. Section III describes
-how we adopt the spectral-clustering method to clusters the CTs into two groups
-according to the hourly pickup-dropoff patterns.
+how we adopt the spectral-clustering method to cluster the CTs into two groups
+according to the pickup-dropoff patterns.
 Numerical results are provided in Section IV, which clearly shows that the two
 distinct clusters of the busiest CTs indeed represent the neighborhoods more
 active during daytime/nighttime. Finally, Section V concludes the report.
@@ -509,19 +514,201 @@ active during daytime/nighttime. Finally, Section V concludes the report.
 
 \section{The Data Sets}
 \label{sec:data}
+The primary dataset studied in this project is the NYC TLC Trip Record
+Data~\cite{nyctlc} during 2014 including both the yellow and green taxi trips,
+which in csv formats amount to a total of around 25GB. Among various fields, we
+are mainly interested in the pickup/dropoff time and location of each trip.
+Also, as the original data consists of trips of both yellow and green taxi,
+which have different modus operandi and coverage~\cite{quora_difference},
+each record of trip is also labeled as ``yellow'' or ``green''. 
 
+In order to analyze the taxi trips at a proper spatial granularity, we adopt the
+2010 NYC census tracts map~\cite{nyc2010ct} which divides the city into 2166
+CTs as in~\cite{schneider2015analyzing}, each composed of around 5-10 blocks. To
+enable efficient manipulations of the data, especially mapping the longitude and
+latitude of each pickup and dropoff to a CT, the trip data are firstly written
+into a PostgreSQL database with PostGIS extension using Python package
+\texttt{sqlalchemy} with \texttt{geoalchemy2}. After data cleansing, a total of
+176493349 records are inserted into the database. The CT map in shapefile
+format is added to the database directly with \texttt{shp2pgsql} data loader.
 
-\section{Spatial-Temporal Distribution of the Trips}
-\label{sec:explore}
+\section{Distinguish Neighborhoods Vibrant in the Night}
+\label{sec:distribution}
+\subsection{Spatial-Temporal Distribution of Taxi Trips}
+We count the number of pickups and dropoffs for each hour of the day (0-23) for
+each CT (1-2166) averaged over the 365 days of 2014. The results are represented
+as a 2166-by-48 matrix $\mathbf{C}$, where $C_{i,j+1}$ and $C_{i,25+j}$,
+$i\in[1, 2166],$, $j\in[0,23]$ represent the average number of pickups/dropoffs in
+the $i$-th CT from $j$ to $j+1$, respectively. Denote the 2166-by-1 vector
+$\mathbf{s}$ as the area of each CT, then the average density of
+pickups/dropoffs, namely $\mbox{diag}(\mathbf{s})\mathbf{C}$, for yellow and
+green taxis are shown in Fig.~\ref{fig:density_pickup_yellow},
+Fig.~\ref{fig:density_dropoff_yellow}, Fig.~\ref{fig:density_pickup_green} and
+Fig.~\ref{fig:density_dropoff_green}, respectively.
+
+In order to explore the temporal pattern of the taxi trips, each row of
+$\mathbf{C}$ is normalized to have sum of 1, resulting in $\bar{\mathbf{C}} =
+[\mbox{diag}(\mathbf{C1})]^{-1}\mathbf{C}$, where $\mathbf{1}$ is a 48-by-1
+all-one vector. Also as shown in the density maps, for both
+yellow and green taxi most pickups and dropoffs are highly concentrated in a
+few CTs. Consequently, we focus only on the most popularized CTs, i.e. we select
+a subset of rows from $\bar{\mathbf{C}}$ as $\bar{\mathbf{C}}_S$. For yellow
+taxi, we select all $N_S = 81$ CTs with average daily total pickups/dropoffs
+greater than 4500. For green taxi, we select all $N_S = 44$ CTs with average
+daily total pickups/dropoffs greater than 300.
+
+\begin{figure}[!t] 
+  \centering
+  \animategraphics[loop,controls,width=\linewidth]{12}
+  {./figs/gif/density_movie_ct_pickup_yellow-}{0}{23}
+  \caption{Density of pickups, yellow taxi.}
+  \label{fig:density_pickup_yellow}
+\end{figure}
+\begin{figure}[!t] 
+  \centering
+  \animategraphics[loop,controls,width=\linewidth]{12}
+  {./figs/gif/density_movie_ct_dropoff_yellow-}{0}{23}
+  \caption{Density of dropoffs, yellow taxi.}
+  \label{fig:density_dropoff_yellow}
+\end{figure}
+\begin{figure}[!t] 
+  \centering
+  \animategraphics[loop,controls,width=\linewidth]{12}
+  {./figs/gif/density_movie_ct_pickup_green-}{0}{23}
+  \caption{Density of pickups, green taxi.}
+  \label{fig:density_pickup_green}
+\end{figure}
+\begin{figure}[!t] 
+  \centering
+  \animategraphics[loop,controls,width=\linewidth]{12}
+  {./figs/gif/density_movie_ct_dropoff_green-}{0}{23}
+  \caption{Density of dropoffs, green taxi.}
+  \label{fig:density_dropoff_green}
+\end{figure}
+
+\subsection{Spectral Clustering}
+To group the CTs based on their daily pickup/dropoff patterns, we perform
+spectral clustering~\cite{von2007tutorial} on $\bar{\mathbf{C}}_S$ for yellow
+and green taxi, respectively. Specifically, we evaluate the $N_S$-by-$N_S$ Gaussian radial
+basis function (rbf) distance matrix $\mathbf{W}$ where
+\begin{align}
+  W_{i,j} = \exp\left(\frac{\|\mathbf{c}_i -
+  \mathbf{c}_j\|_2^2}{\epsilon}\right)
+\end{align}
+where $\mathbf{c}_i$, $\mathbf{c}_j$ are the $i$, $j$-th row of
+$\bar{\mathbf{C}}_S$. Then we apply k-means on $\mathbf{v}$, namely the second
+principle eigen-vector of $\mathbf{L} = \mathbf{D} - \mathbf{W}$, where the
+diagonal degree matrix $\mathbf{D} = \mbox{diag}(\mathbf{W1})$. The parameter
+$\epsilon$ is selected by examining the historgram of entries of $\mathbf{v}$.
+In our case, we select $\epsilon$ to be 180 times the median of $\|\mathbf{c}_i
+- \mathbf{c}_j\|_2^2$ for yellow taxi trips and 160 times the median for green
+taxi trips.
 % Outline
 
 \section{Numerical Results}
 \label{sec:numerical}
+The histogram of the entries of $\mathbf{v}$ for yellow taxi and green taxi are
+shown in Fig.~\ref{fig:hist_yellow} and Fig.~\ref{fig:hist_green},
+respectively. The spectral clustering indeed identifies two clusters, and the
+corresponding CTs are plotted in Fig.~\ref{fig:coloring_yellow} and
+Fig.~\ref{fig:coloring_green} with Python's \texttt{matplotlib} library with
+\texttt{Basemap} toolkits. Cluster 0 primarily includes upper and middle
+Manhattan, JFK Airport, LaGuardia Airport, and the north-west part of Queens
+and Brooklyn. Cluster 1, on the other hand, primarily includes certain areas
+of West Village, East Village and Williamsburg. By examining the temporal
+variation of pickups and dropoffs for the two clusters as shown in
+Fig.~\ref{fig:curve_yellow} and Fig.~\ref{fig:curve_green}, the two clusters are
+different in the following aspects:
+\begin{itemize}
+  \item Cluster 0 has more pickups/dropoffs during the day time (5:00-17:00)
+  than cluster 1.
+  \item Both the pickup/dropoff curve reach their peak at around 18:00/19:00 for
+  cluster 0. In comparison, for cluster 1, the pickup curve reaches its peak at
+  around 0:00, while the drop off curve reaches its peak at around 20:00.
+\end{itemize}
 
+Consequently, it is reasonable to argue that cluster 0 represents the most
+popularized ``day-time'' neighborhoods of NYC while cluster 1 represents the most
+popularized ``night-time'' neighborhoods. This is also in accordance with
+the results shown in the ``NYC Late Night Taxi Index'' section
+of~\cite{schneider2015analyzing}. To further justify the clustering results, we
+plot the top 20 most reviewed bars/lounges, dance clubs and formal restaurants
+from Yelp in Fig.~\ref{fig:tag}. The ``night-time'' cluster of 13 CTs found by
+the spectral clustering algorithm contains around 1/3 of the 60 most reviewed
+hotspots, while the business area of midtown-midtown south and the Financial
+districts are correctly (heuristically) classified as the ``day-time''
+neighborhoods. However, we admit that the spectral clustering method
+adopted here is rather sensitive to the choice of parameter $N_S$ and
+$\epsilon$, and the interpretation of the results is subjective as in most
+unsupervised learning techniques. More rigorous approaches to similar
+problems can be found in~\cite{Yuan:2012:DRD:2339530.2339561} and the references
+therein.
+
+\begin{figure}[!t] 
+  \centering
+  \includegraphics[width=1.0\columnwidth]{./figs/hist_yellow.jpg}
+  \caption{Histogram of $\mathbf{v}$ for yellow taxi.}
+  \label{fig:hist_yellow}
+\end{figure}
+\begin{figure}[!t] 
+  \centering
+  \includegraphics[width=1.0\columnwidth]{./figs/hist_green.jpg}
+  \caption{Histogram of $\mathbf{v}$ for green taxi.}
+  \label{fig:hist_green}
+\end{figure}
+
+\begin{figure}[!t] 
+  \centering
+  \includegraphics[width=1.0\columnwidth]{./figs/coloring_yellow.jpg}
+  \caption{Spatial distribution of the two cluster of CTs for yellow taxi.}
+  \label{fig:coloring_yellow}
+\end{figure}
+\begin{figure}[!t]
+  \centering
+  \includegraphics[width=1.0\columnwidth]{./figs/coloring_green.jpg}
+  \caption{Spatial distribution of the two cluster of CTs for green taxi.}
+  \label{fig:coloring_green}
+\end{figure}
+
+\begin{figure}[!t] 
+  \centering
+  \includegraphics[width=1.0\columnwidth]{./figs/curve_yellow.jpg}
+  \caption{Temporal variation of pickups/dropoffs of the two clusters of CTs for
+  yellow taxi. Lines represent the mean value and shaded areas represent the
+  standard deviation.}
+  \label{fig:curve_yellow}
+\end{figure}
+\begin{figure}[!t] 
+  \centering
+  \includegraphics[width=1.0\columnwidth]{./figs/curve_green.jpg}
+  \caption{Temporal variation of pickups/dropoffs of the two cluster of CTs for green taxi.}
+  \label{fig:curve_green}
+\end{figure}
+
+\begin{figure}[!t]
+  \begin{minipage}[b]{.48\linewidth}
+    \centering
+    \centerline{\includegraphics[width=4.5cm]{./figs/coloring_yellow_tagged.jpg}}
+    \centerline{(a) Yellow}\medskip
+  \end{minipage}
+  \hfill
+  \begin{minipage}[b]{0.48\linewidth}
+    \centering
+    \centerline{\includegraphics[width=4.5cm]{./figs/coloring_green_tagged.jpg}}
+    \centerline{(b) Green}\medskip
+  \end{minipage}
+  \caption{Spatial distribution of the two cluster of CTs plotted with the top
+  20 most reviewed bars/lounges, dance clubs and formal restaurants from Yelp.}
+  \label{fig:tag}
+\end{figure}
 
 \section{Conclusion}
 \label{sec:conclusion}
-
+In this work, we studied the problem of infering the nightlife hotspot in New
+York City by making use of the NYC taxi data in 2014. By extracting the daily
+pickup/dropoff patterns sampled hourly and adopting the spectral clustering
+algorithm on the high dimensional (48) feature, we are able to reasonably
+cluster the CTs into the ``day-time'' and ``night-time'' neighborhoods. 
 % An example of a floating figure using the graphicx package.
 % Note that \label must occur AFTER (or within) \caption.
 % For figures, \caption should occur after the \includegraphics.

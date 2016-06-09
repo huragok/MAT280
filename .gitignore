@@ -7,11 +7,14 @@ tmp
 .project
 .texlipse
 .metadata
+
+# Figures
 raw
 *.png
+*.odg
 
 # Homework handouts and compiled pdf files
-*.pdf
+# *.pdf
 
 # Datasets
 SomeYaleFaces.mat
@@ -22,3 +25,7 @@ genomedata.mat
 
 # notebook
 .ipynb_checkpoints/
+
+project/datasets/
+project/figs/gif/
+*#
